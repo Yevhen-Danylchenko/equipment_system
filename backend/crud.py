@@ -14,7 +14,7 @@ def create_equipment(db: Session, equipment: schemas.EquipmentCreate):
         name=equipment.name,
         status=equipment.status,
         room=equipment.room,
-        problems=equipment.problems or []
+        problems=equipment.problems
     )
     db.add(db_equipment)
     db.commit()
@@ -37,8 +37,6 @@ def move_equipment(db: Session, equipment_id: int, to_room: str):
     if eq:
         from_room = eq.room
         eq.room = to_room
-        db.commit()
-        db.refresh(eq)
         history = models.MovementHistory(
             equipment_id=equipment_id,
             from_room=from_room,
@@ -46,6 +44,7 @@ def move_equipment(db: Session, equipment_id: int, to_room: str):
         )
         db.add(history)
         db.commit()
+        db.refresh(eq)
     return eq
 
 def get_history(db: Session, equipment_id: int):

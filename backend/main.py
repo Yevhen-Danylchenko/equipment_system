@@ -2,6 +2,8 @@
 from fastapi import FastAPI
 from backend import models, database
 from backend.routers import equipment
+from backend.models import Equipment, MovementHistory
+
 
 # створюємо таблиці при старті
 models.Base.metadata.create_all(bind=database.engine)

@@ -16,6 +16,6 @@ def get_db():
         db.close()
 
 if __name__ == "__main__":
-    # Імпортуємо моделі і створюємо таблиці
+    from .models import Equipment, MovementHistory
     Base.metadata.create_all(bind=engine)
     print("База даних створена!")

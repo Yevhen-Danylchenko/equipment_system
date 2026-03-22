@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON, func
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base
@@ -9,7 +9,7 @@ class Equipment(Base):
     name = Column(String, index=True)
     status = Column(String, default="справне")
     room = Column(String)
-    problems = Column(JSON, default=[])  # зберігаємо як JSON-рядок
+    problems = Column(JSON, default=list)  # зберігаємо як JSON-рядок
 
     movements = relationship("MovementHistory", back_populates="equipment")
 
@@ -19,6 +19,6 @@ class MovementHistory(Base):
     equipment_id = Column(Integer, ForeignKey("equipment.id"))
     from_room = Column(String)
     to_room = Column(String)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
 
     equipment = relationship("Equipment", back_populates="movements")
